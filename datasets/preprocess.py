@@ -1,3 +1,4 @@
+import csv
 import os
 import random
 import librosa
@@ -108,3 +109,15 @@ def nancy(root_path, meta_file):
             items.append([text, wav_file])
     random.shuffle(items)    
     return items
+
+def commonvoice_deutsche(root_path, meta_file):
+  txt_file = os.path.join(root_path, meta_file)
+  items = []
+  with open(txt_file, newline='') as tsvin:
+    tsvin = csv.reader(tsvin, delimiter='\t')
+    for row in tsvin:
+      text = row[2]
+      speech = os.path.join(root_path, 'clips', row[1])
+      items.append([text, speech])
+  random.shuffle(items)
+  return items
