@@ -490,15 +490,20 @@ def main(args):  # pylint: disable=redefined-outer-name
     if 'characters' in c.keys():
         symbols, phonemes = make_symbols(**c.characters)
 
+    print("ap set up")
     # DISTRUBUTED
     if num_gpus > 1:
         init_distributed(args.rank, num_gpus, args.group_id,
                          c.distributed["backend"], c.distributed["url"])
     num_chars = len(phonemes) if c.use_phonemes else len(symbols)
 
+    print("distributed done")
+    
     # load data instances
     meta_data_train, meta_data_eval = load_meta_data(c.datasets)
 
+    print("loaded data")
+    
     # parse speakers
     if c.use_speaker_embedding:
         speakers = get_speakers(meta_data_train)
