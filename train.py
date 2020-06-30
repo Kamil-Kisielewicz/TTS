@@ -637,6 +637,8 @@ if __name__ == '__main__':
                         default="",
                         help='DISTRIBUTED: process group id.')
     args = parser.parse_args()
+    
+    print("Parsed")
 
     if args.continue_path != '':
         args.output_path = args.continue_path
@@ -659,6 +661,8 @@ if __name__ == '__main__':
 
     c_logger = ConsoleLogger()
 
+    print("Logger built")
+    
     if args.rank == 0:
         os.makedirs(AUDIO_PATH, exist_ok=True)
         new_fields = {}
@@ -676,6 +680,8 @@ if __name__ == '__main__':
         # write model desc to tensorboard
         tb_logger.tb_add_text('model-description', c['run_description'], 0)
 
+    print("main gonna start")
+        
     try:
         main(args)
     except KeyboardInterrupt:
