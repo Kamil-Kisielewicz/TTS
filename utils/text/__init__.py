@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import re
+from packaging import version
 import phonemizer
 from phonemizer.phonemize import phonemize
 from utils.text import cleaners
-from utils.text.symbols import symbols, phonemes, _phoneme_punctuations
+from utils.text.symbols import make_symbols, symbols, phonemes, _phoneme_punctuations, _bos, \
+    _eos
 
 # Mappings from symbol to numeric ID and vice versa:
 _symbol_to_id = {s: i for i, s in enumerate(symbols)}
@@ -14,10 +16,10 @@ _phonemes_to_id = {s: i for i, s in enumerate(phonemes)}
 _id_to_phonemes = {i: s for i, s in enumerate(phonemes)}
 
 # Regular expression matching text enclosed in curly braces:
-_curly_re = re.compile(r'(.*?)\{(.+?)\}(.*)')
+_CURLY_RE = re.compile(r'(.*?)\{(.+?)\}(.*)')
 
-# Regular expression matchinf punctuations, ignoring empty space
-pat = r'['+_phoneme_punctuations[:-1]+']+'
+# Regular expression matching punctuations, ignoring empty space
+PHONEME_PUNCTUATION_PATTERN = r'['+_phoneme_punctuations+']+'
 
 
 def text2phone(text, language):
@@ -26,37 +28,78 @@ def text2phone(text, language):
     '''
     seperator = phonemizer.separator.Separator(' |', '', '|')
     #try:
-    punctuations = re.findall(pat, text)
-    ph = phonemize(text, separator=seperator, strip=False, njobs=1, backend='espeak', language=language)
-    # Replace \n with matching punctuations.
-    if len(punctuations) > 0:
-        #print(text,'--->',ph)
-        for punct in punctuations:
-            ph = ph.replace('| |\n', '|'+punct+'| |', 1)
+    punctuations = re.findall(PHONEME_PUNCTUATION_PATTERN, text)
+    if version.parse(phonemizer.__version__) < version.parse('2.1'):
+        ph = phonemize(text, separator=seperator, strip=False, njobs=1, backend='espeak', language=language)
+        ph = ph[:-1].strip() # skip the last empty character
+        # phonemizer does not tackle punctuations. Here we do.
+        # Replace \n with matching punctuations.
+        if punctuations:
+            # if text ends with a punctuation.
+            if text[-1] == punctuations[-1]:
+                for punct in punctuations[:-1]:
+                    ph = ph.replace('| |\n', '|'+punct+'| |', 1)
+                    ph = ph + punctuations[-1]
+            else:
+                for punct in punctuations:
+                    ph = ph.replace('| |\n', '|'+punct+'| |', 1)
+    elif version.parse(phonemizer.__version__) >= version.parse('2.1'):
+        ph = phonemize(text, separator=seperator, strip=False, njobs=1, backend='espeak', language=language, preserve_punctuation=True)
+        # this is a simple fix for phonemizer.
+        # https://github.com/bootphon/phonemizer/issues/32
+        if punctuations:
+            for punctuation in punctuations:
+                ph = ph.replace(f"| |{punctuation} ", f"|{punctuation}| |").replace(f"| |{punctuation}", f"|{punctuation}| |")
+            ph = ph[:-3]
+    else:
+        raise RuntimeError(" [!] Use 'phonemizer' version 2.1 or older.")
+
     return ph
 
 
-def phoneme_to_sequence(text, cleaner_names, language):
-    '''
-    TODO: This ignores punctuations
-    '''
+def pad_with_eos_bos(phoneme_sequence, tp=None):
+    # pylint: disable=global-statement
+    global _phonemes_to_id, _bos, _eos
+    if tp:
+        _bos = tp['bos']
+        _eos = tp['eos']
+        _, _phonemes = make_symbols(**tp)
+        _phonemes_to_id = {s: i for i, s in enumerate(_phonemes)}
+
+    return [_phonemes_to_id[_bos]] + list(phoneme_sequence) + [_phonemes_to_id[_eos]]
+
+
+def phoneme_to_sequence(text, cleaner_names, language, enable_eos_bos=False, tp=None):
+    # pylint: disable=global-statement
+    global _phonemes_to_id
+    if tp:
+        _, _phonemes = make_symbols(**tp)
+        _phonemes_to_id = {s: i for i, s in enumerate(_phonemes)}
+
     sequence = []
+    text = text.replace(":", "")
     clean_text = _clean_text(text, cleaner_names)
-    phonemes = text2phone(clean_text, language)
-#    print(phonemes.replace('|', ''))
-    if phonemes is None:
+    to_phonemes = text2phone(clean_text, language)
+    if to_phonemes is None:
         print("!! After phoneme conversion the result is None. -- {} ".format(clean_text))
-    for phoneme in phonemes.split('|'):
+    # iterate by skipping empty strings - NOTE: might be useful to keep it to have a better intonation.
+    for phoneme in filter(None, to_phonemes.split('|')):
         sequence += _phoneme_to_sequence(phoneme)
-    #print(clean_text, ' -- ', phonemes.replace('|', ''))
     # Append EOS char
-    sequence.append(_phonemes_to_id['&'])
+    if enable_eos_bos:
+        sequence = pad_with_eos_bos(sequence, tp=tp)
     return sequence
 
 
-def sequence_to_phoneme(sequence):
+def sequence_to_phoneme(sequence, tp=None):
+    # pylint: disable=global-statement
     '''Converts a sequence of IDs back to a string'''
+    global _id_to_phonemes
     result = ''
+    if tp:
+        _, _phonemes = make_symbols(**tp)
+        _id_to_phonemes = {i: s for i, s in enumerate(_phonemes)}
+
     for symbol_id in sequence:
         if symbol_id in _id_to_phonemes:
             s = _id_to_phonemes[symbol_id]
@@ -64,24 +107,26 @@ def sequence_to_phoneme(sequence):
     return result.replace('}{', ' ')
 
 
-def text_to_sequence(text, cleaner_names):
+def text_to_sequence(text, cleaner_names, tp=None):
     '''Converts a string of text to a sequence of IDs corresponding to the symbols in the text.
-
       The text can optionally have ARPAbet sequences enclosed in curly braces embedded
       in it. For example, "Turn left on {HH AW1 S S T AH0 N} Street."
-
       Args:
         text: string to convert to a sequence
         cleaner_names: names of the cleaner functions to run the text through
-
       Returns:
         List of integers corresponding to the symbols in the text
     '''
-    sequence = []
+    # pylint: disable=global-statement
+    global _symbol_to_id
+    if tp:
+        _symbols, _ = make_symbols(**tp)
+        _symbol_to_id = {s: i for i, s in enumerate(_symbols)}
 
+    sequence = []
     # Check for curly braces and treat their contents as ARPAbet:
-    while len(text):
-        m = _curly_re.match(text)
+    while text:
+        m = _CURLY_RE.match(text)
         if not m:
             sequence += _symbols_to_sequence(_clean_text(text, cleaner_names))
             break
@@ -89,14 +134,17 @@ def text_to_sequence(text, cleaner_names):
             _clean_text(m.group(1), cleaner_names))
         sequence += _arpabet_to_sequence(m.group(2))
         text = m.group(3)
-
-    # Append EOS token
-    sequence.append(_symbol_to_id['&'])
     return sequence
 
 
-def sequence_to_text(sequence):
+def sequence_to_text(sequence, tp=None):
     '''Converts a sequence of IDs back to a string'''
+    # pylint: disable=global-statement
+    global _id_to_symbol
+    if tp:
+        _symbols, _ = make_symbols(**tp)
+        _id_to_symbol = {i: s for i, s in enumerate(_symbols)}
+
     result = ''
     for symbol_id in sequence:
         if symbol_id in _id_to_symbol:
@@ -117,12 +165,12 @@ def _clean_text(text, cleaner_names):
     return text
 
 
-def _symbols_to_sequence(symbols):
-    return [_symbol_to_id[s] for s in symbols if _should_keep_symbol(s)]
+def _symbols_to_sequence(syms):
+    return [_symbol_to_id[s] for s in syms if _should_keep_symbol(s)]
 
 
-def _phoneme_to_sequence(phonemes):
-    return [_phonemes_to_id[s] for s in list(phonemes) if _should_keep_phoneme(s)]
+def _phoneme_to_sequence(phons):
+    return [_phonemes_to_id[s] for s in list(phons) if _should_keep_phoneme(s)]
 
 
 def _arpabet_to_sequence(text):
@@ -130,8 +178,8 @@ def _arpabet_to_sequence(text):
 
 
 def _should_keep_symbol(s):
-    return s in _symbol_to_id and s is not '_' and s is not '&'
+    return s in _symbol_to_id and s not in ['~', '^', '_']
 
 
 def _should_keep_phoneme(p):
-    return p in _phonemes_to_id and p is not '_' and p is not '&'
+    return p in _phonemes_to_id and p not in ['~', '^', '_']
