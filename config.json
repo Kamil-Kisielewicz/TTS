@@ -88,7 +88,7 @@
 
     // TENSORBOARD and LOGGING
     "print_step": 25,       // Number of steps to log traning on console.
-    "print_eval": false,     // If True, it prints intermediate loss values in evalulation.
+    "print_eval": true,     // If True, it prints intermediate loss values in evalulation.
     "save_step": 10000,      // Number of training steps expected to save traninpg stats and checkpoints.
     "checkpoint": true,     // If true, it saves checkpoints per "save_step"
     "tb_model_param_stats": false,     // true, plots param stats per layer on tensorboard. Might be memory consuming, but good for debugging.
@@ -134,7 +134,7 @@
     "print_step": 50,       // Number of steps to log traning on console.
     "tb_model_param_stats": false,     // true, plots param stats per layer on tensorboard. Might be memory consuming, but good for debugging. 
 
-    "run_eval": true,
+    "run_eval": true, // maybe needs to be FALSE *****
     "data_path": "../TTS-Portuguese-Corpus/",  // DATASET-RELATED: can overwritten from command argument
     "meta_file_train": "train.csv",      // DATASET-RELATED: metafile for training dataloader.
     "meta_file_val": "test.csv",    // DATASET-RELATED: metafile for evaluation dataloader.
