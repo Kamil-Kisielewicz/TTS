@@ -82,16 +82,6 @@
     "style_wav_for_test": null,          // path to style wav file to be used in TacotronGST inference.
     "use_gst": false,       // TACOTRON ONLY: use global style tokens
 
-    // DATASETS
-    "datasets":   // List of datasets. They all merged and they get different speaker_ids.
-        [
-            {
-                "name": "ljspeech",
-                "path": "/home/erogol/Data/LJSpeech-1.1/",
-                "meta_file_train": "metadata.csv",
-                "meta_file_val": null
-            }
-        ]
     "embedding_size": 256,  // Character embedding vector length. You don't need to change it in general.
     //"text_cleaner": "phoneme_basic_cleaners",
     "epochs": 1,         // total number of epochs to train.
@@ -124,4 +114,15 @@
     "phoneme_cache_path": "tts-german_de_phonemes",  // phoneme computation is slow, therefore, it caches results in the given folder.
     "use_phonemes": true,           // use phonemes instead of raw characters. It is suggested for better pronounciation.
     "phoneme_language": "de"     // depending on your target language, pick one from  https://github.com/bootphon/phonemizer#languages
+    
+    // DATASETS
+    "datasets":   // List of datasets. They all merged and they get different speaker_ids.
+        [
+            {
+                "name": "ljspeech",
+                "path": "/home/erogol/Data/LJSpeech-1.1/",
+                "meta_file_train": "metadata.csv",
+                "meta_file_val": null
+            }
+        ]
 }
