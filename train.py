@@ -9,28 +9,28 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 
-from TTS.datasets.TTSDataset import MyDataset
+from datasets.TTSDataset import MyDataset
 from distribute import (DistributedSampler, apply_gradient_allreduce,
                         init_distributed, reduce_tensor)
-from TTS.layers.losses import TacotronLoss
-from TTS.utils.audio import AudioProcessor
-from TTS.utils.generic_utils import (count_parameters, create_experiment_folder, remove_experiment_folder,
+from layers.losses import TacotronLoss
+from utils.audio import AudioProcessor
+from utils.generic_utils import (count_parameters, create_experiment_folder, remove_experiment_folder,
                                      get_git_branch, set_init_dict,
                                      setup_model, KeepAverage, check_config)
-from TTS.utils.io import (save_best_model, save_checkpoint,
+from utils.io import (save_best_model, save_checkpoint,
                           load_config, copy_config_file)
-from TTS.utils.training import (NoamLR, check_update, adam_weight_decay,
+from utils.training import (NoamLR, check_update, adam_weight_decay,
                                 gradual_training_scheduler, set_weight_decay)
-from TTS.utils.tensorboard_logger import TensorboardLogger
-from TTS.utils.console_logger import ConsoleLogger
-from TTS.utils.speakers import load_speaker_mapping, save_speaker_mapping, \
+from utils.tensorboard_logger import TensorboardLogger
+from utils.console_logger import ConsoleLogger
+from utils.speakers import load_speaker_mapping, save_speaker_mapping, \
     get_speakers
-from TTS.utils.synthesis import synthesis
-from TTS.utils.text.symbols import make_symbols, phonemes, symbols
-from TTS.utils.visual import plot_alignment, plot_spectrogram
-from TTS.datasets.preprocess import load_meta_data
-from TTS.utils.radam import RAdam
-from TTS.utils.measures import alignment_diagonal_score
+from utils.synthesis import synthesis
+from utils.text.symbols import make_symbols, phonemes, symbols
+from utils.visual import plot_alignment, plot_spectrogram
+from datasets.preprocess import load_meta_data
+from utils.radam import RAdam
+from utils.measures import alignment_diagonal_score
 
 torch.backends.cudnn.enabled = True
 torch.backends.cudnn.benchmark = False
