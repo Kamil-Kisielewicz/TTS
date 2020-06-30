@@ -27,7 +27,7 @@
 
     "embedding_size": 256,  // Character embedding vector length. You don't need to change it in general.
     "text_cleaner": "phoneme_basic_cleaners",
-    "epochs": 1000,         // total number of epochs to train.
+    "epochs": 1,         // total number of epochs to train.
     "lr": 0.0001,            // Initial learning rate. If Noam decay is active, maximum learning rate.
     "lr_decay": false,      // if true, Noam learning rate decaying is applied through training.
     "loss_weight": 0.0,     // loss weight to emphasize lower frequencies. Lower frequencies are in general more important for speech signals.
@@ -54,7 +54,7 @@
     "output_path": "../TTS-Mozilla/Model/tts-portuguese_models/",      // DATASET-RELATED: output path for all training outputs.
     "num_loader_workers": 5,        // number of training data loader processes. Don't set it too big. 4-8 are good values.
     "num_val_loader_workers": 2,    // number of evaluation data loader processes.
-    "phoneme_cache_path": "tts-portuguese_pt-br_phonemes",  // phoneme computation is slow, therefore, it caches results in the given folder.
+    "phoneme_cache_path": "tts-german_de_phonemes",  // phoneme computation is slow, therefore, it caches results in the given folder.
     "use_phonemes": true,           // use phonemes instead of raw characters. It is suggested for better pronounciation.
-    "phoneme_language": "pt-br"     // depending on your target language, pick one from  https://github.com/bootphon/phonemizer#languages
+    "phoneme_language": "de"     // depending on your target language, pick one from  https://github.com/bootphon/phonemizer#languages
 }
