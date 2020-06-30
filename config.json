@@ -1,5 +1,5 @@
 {
-    "model_name": "TTS-Portuguese",
+    "model_name": "TTS-German",
     "model_description": "Added support for the dataset TTS-Portuguese Corpus and adjusted hyperparametre for the convergence of the model",
 
     "audio":{
