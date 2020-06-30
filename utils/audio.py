@@ -303,6 +303,7 @@ class AudioProcessor(object):
 
     ### save and load ###
     def load_wav(self, filename, sr=None):
+        print(filename)
         if sr is None:
             x, sr = sf.read(filename)
         else:
