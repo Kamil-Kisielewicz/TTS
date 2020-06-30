@@ -5,6 +5,10 @@ import librosa
 
 from utils.generic_utils import split_dataset
 
+def get_preprocessor_by_name(name):
+    """Returns the respective preprocessing function."""
+    thismodule = sys.modules[__name__]
+    return getattr(thismodule, name.lower())
 
 def load_meta_data(datasets):
     meta_data_train_all = []
