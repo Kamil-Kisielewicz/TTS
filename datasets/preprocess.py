@@ -117,7 +117,7 @@ def commonvoice_deutsche(root_path, meta_file):
     tsvin = csv.reader(tsvin, delimiter='\t')
     for row in tsvin:
       text = row[2]
-      speech = os.path.join(root_path, 'clips', row[1])
+      speech = os.path.join(root_path, row[1])
       items.append([text, speech])
   random.shuffle(items)
   return items
