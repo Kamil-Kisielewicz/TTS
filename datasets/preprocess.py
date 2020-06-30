@@ -148,5 +148,6 @@ def commonvoice_deutsche(root_path, meta_file):
       text = row[2]
       speech = os.path.join(root_path, row[1])
       items.append([text, speech])
+  print(items[10])
   random.shuffle(items)
   return items
