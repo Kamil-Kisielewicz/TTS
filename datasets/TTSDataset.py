@@ -69,8 +69,8 @@ class MyDataset(Dataset):
             print(" | > Number of instances : {}".format(len(self.items)))
         self.sort_items()
 
-    def load_wav(self, filename):
-        audio = self.ap.load_wav(filename)
+    def load_wav(self, filename, sr=self.ap.sample_rate):
+        audio = self.ap.load_wav(filename, sr)
         return audio
 
     @staticmethod
