@@ -119,8 +119,10 @@ def format_data(data):
 
 def train(model, criterion, optimizer, optimizer_st, scheduler,
           ap, global_step, epoch):
+    print("before loader")
     data_loader = setup_loader(ap, model.decoder.r, is_val=False,
                                verbose=(epoch == 0))
+    print("after loader")
     model.train()
     epoch_time = 0
     train_values = {
@@ -145,7 +147,9 @@ def train(model, criterion, optimizer, optimizer_st, scheduler,
         batch_n_iter = int(len(data_loader.dataset) / c.batch_size)
     end_time = time.time()
     c_logger.print_train_start()
+    print("training is started")
     for num_iter, data in enumerate(data_loader):
+        print(num_iter)
         start_time = time.time()
 
         # format data
