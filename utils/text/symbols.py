@@ -33,17 +33,6 @@ _other_symbols = "ʍwɥʜʢʡɕʑɺɧ'̃' "
 _diacrilics = 'ɚ˞ɫ'
 _phonemes = _vowels + _non_pulmonic_consonants + _pulmonic_consonants + _suprasegmentals + _other_symbols + _diacrilics
 
-
-
-_phonemes = sorted(list(set(_phonemes)))
-
-# Prepend "@" to ARPAbet symbols to ensure uniqueness (some are the same as uppercase letters):
-_arpabet = ['@' + s for s in _phonemes]
-
-# Export all symbols:
-symbols = [_pad, _eos] + list(_characters) + _arpabet
-phonemes = [_pad, _eos] + list(_phonemes) + list(_punctuations)
-
 symbols, phonemes = make_symbols(_characters, _phonemes, _punctuations, _pad, _eos, _bos)
 
 if __name__ == '__main__':
