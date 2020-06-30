@@ -152,7 +152,7 @@
     "datasets":   // List of datasets. They all merged and they get different speaker_ids.
         [
             {
-                "name": "ljspeech",
+                "name": "commonvoice_deutsche",
                 "path": "/home/erogol/Data/LJSpeech-1.1/",
                 "meta_file_train": "metadata.csv",
                 "meta_file_val": null
