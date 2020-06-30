@@ -111,7 +111,7 @@ class MyDataset(Dataset):
         return phonemes
 
     def load_data(self, idx):
-        text, wav_file, speaker_name = self.items[idx]
+        text, wav_file""", speaker_name""" = self.items[idx]
         wav = np.asarray(self.load_wav(wav_file), dtype=np.float32)
 
         if self.use_phonemes:
@@ -127,7 +127,7 @@ class MyDataset(Dataset):
             'text': text,
             'wav': wav,
             'item_idx': self.items[idx][1],
-            'speaker_name': speaker_name
+            'speaker_name': 'speaker_name'
         }
         return sample
 
