@@ -149,8 +149,7 @@ def train(model, criterion, optimizer, optimizer_st, scheduler,
     c_logger.print_train_start()
     print("training is started")
     for num_iter, data in enumerate(data_loader):
-        print(data)
-        print("in training loop")
+        print(num_iter)
         start_time = time.time()
 
         # format data
