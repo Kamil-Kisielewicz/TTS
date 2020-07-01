@@ -125,8 +125,8 @@
     "windowing": false,      // Enables attention windowing. Used only in eval mode.
     "memory_size": 5,       // memory queue size used to queue network predictions to feed autoregressive connection. Useful if r < 5. 
 
-    "batch_size": 32,       // Batch size for training. Lower values than 32 might cause hard to learn attention.
-    "eval_batch_size":10,   
+    "batch_size": 256,       // Batch size for training. Lower values than 32 might cause hard to learn attention.
+    "eval_batch_size":256,   
     "r": 2,                 // Number of frames to predict for step.
     "wd": 0.00001,         // Weight decay weight.
     "checkpoint": true,     // If true, it saves checkpoints per "save_step"
@@ -134,7 +134,7 @@
     "print_step": 50,       // Number of steps to log traning on console.
     "tb_model_param_stats": false,     // true, plots param stats per layer on tensorboard. Might be memory consuming, but good for debugging. 
 
-    "run_eval": true, // maybe needs to be FALSE *****
+    "run_eval": false, // maybe needs to be FALSE *****
     "data_path": "../TTS-Portuguese-Corpus/",  // DATASET-RELATED: can overwritten from command argument
     "meta_file_train": "train.csv",      // DATASET-RELATED: metafile for training dataloader.
     "meta_file_val": "test.csv",    // DATASET-RELATED: metafile for evaluation dataloader.
