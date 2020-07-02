@@ -2,7 +2,7 @@
 
 import re
 from packaging import version
-# import phonemizer
+import phonemizer
 from phonemizer.phonemize import phonemize
 from utils.text import cleaners
 from utils.text.symbols import make_symbols, symbols, phonemes, _phoneme_punctuations, _bos, \
