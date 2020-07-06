@@ -428,14 +428,14 @@ def evaluate(model, criterion, ap, global_step, epoch):
 #                 epoch_stats['guided_attention_loss'] = keep_avg['avg_ga_loss']
 #             tb_logger.tb_eval_stats(global_step, epoch_stats)
 #             tb_logger.tb_eval_figures(global_step, eval_figures)
-
-    if args.rank == 0 and epoch > c.test_delay_epochs:
+    if epoch > c.test_delay_epochs:
+    #if args.rank == 0 and epoch > c.test_delay_epochs:
         if c.test_sentences_file is None:
             test_sentences = [
-                "It took me quite a long time to develop a voice, and now that I have it I'm not going to be silent.",
-                "Be a voice, not an echo.",
-                "I'm sorry Dave. I'm afraid I can't do that.",
-                "This cake is great. It's so delicious and moist."
+                "Hallo, ich heiße Greta.",
+                "Das Kind verschwendet Zeit damit, Feminismus zu studieren",
+                "Seine Lieblingsfarbe ist blau.",
+                "Wenn wir alle einschlafen, fahren wir zur Hölle."
             ]
         else:
             with open(c.test_sentences_file, "r") as f:
