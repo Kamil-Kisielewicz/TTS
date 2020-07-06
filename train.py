@@ -433,8 +433,9 @@ def evaluate(model, criterion, ap, global_step, epoch):
     #if args.rank == 0 and epoch > c.test_delay_epochs:
         if c.test_sentences_file is None:
             test_sentences = [
+                "Hi there.",
                 "Hallo, ich heiße Greta.",
-                "Das Kind verschwendet Zeit damit, Feminismus zu studieren",
+                "Das Kind verschwendet Zeit damit, Feminismus zu studieren.",
                 "Seine Lieblingsfarbe ist blau.",
                 "Wenn wir alle einschlafen, fahren wir zur Hölle."
             ]
