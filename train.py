@@ -542,6 +542,7 @@ def main(args):  # pylint: disable=redefined-outer-name
 
     if args.restore_path:
         checkpoint = torch.load(args.restore_path, map_location='cpu')
+        print("restoring!")
         try:
             # TODO: fix optimizer init, model.cuda() needs to be called before
             # optimizer restore
