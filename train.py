@@ -428,7 +428,8 @@ def evaluate(model, criterion, ap, global_step, epoch):
 #                 epoch_stats['guided_attention_loss'] = keep_avg['avg_ga_loss']
 #             tb_logger.tb_eval_stats(global_step, epoch_stats)
 #             tb_logger.tb_eval_figures(global_step, eval_figures)
-    if epoch > c.test_delay_epochs:
+    if True:
+    #if epoch > c.test_delay_epochs:
     #if args.rank == 0 and epoch > c.test_delay_epochs:
         if c.test_sentences_file is None:
             test_sentences = [
