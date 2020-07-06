@@ -149,6 +149,6 @@ def commonvoice_deutsche(root_path, meta_file):
       speech = os.path.join(root_path, row[1])
       if '.mp3' in speech:
         items.append([text, speech])
-  print(items[10])
+  print(items[0])
   random.shuffle(items)
   return items
