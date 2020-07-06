@@ -328,106 +328,106 @@ def evaluate(model, criterion, ap, global_step, epoch):
     keep_avg.add_values(eval_values_dict)
 
     c_logger.print_eval_start()
-    if data_loader is not None:
-        for num_iter, data in enumerate(data_loader):
-            start_time = time.time()
+#     if data_loader is not None:
+#         for num_iter, data in enumerate(data_loader):
+#             start_time = time.time()
 
-            # format data
-            text_input, text_lengths, mel_input, mel_lengths, linear_input, stop_targets, speaker_ids, _, _ = format_data(data)
-            assert mel_input.shape[1] % model.decoder.r == 0
+#             # format data
+#             text_input, text_lengths, mel_input, mel_lengths, linear_input, stop_targets, speaker_ids, _, _ = format_data(data)
+#             assert mel_input.shape[1] % model.decoder.r == 0
 
-            # forward pass model
-            if c.bidirectional_decoder:
-                decoder_output, postnet_output, alignments, stop_tokens, decoder_backward_output, alignments_backward = model(
-                    text_input, text_lengths, mel_input, speaker_ids=speaker_ids)
-            else:
-                decoder_output, postnet_output, alignments, stop_tokens = model(
-                    text_input, text_lengths, mel_input, speaker_ids=speaker_ids)
-                decoder_backward_output = None
+#             # forward pass model
+#             if c.bidirectional_decoder:
+#                 decoder_output, postnet_output, alignments, stop_tokens, decoder_backward_output, alignments_backward = model(
+#                     text_input, text_lengths, mel_input, speaker_ids=speaker_ids)
+#             else:
+#                 decoder_output, postnet_output, alignments, stop_tokens = model(
+#                     text_input, text_lengths, mel_input, speaker_ids=speaker_ids)
+#                 decoder_backward_output = None
 
-            # set the alignment lengths wrt reduction factor for guided attention
-            if mel_lengths.max() % model.decoder.r != 0:
-                alignment_lengths = (mel_lengths + (model.decoder.r - (mel_lengths.max() % model.decoder.r))) // model.decoder.r
-            else:
-                alignment_lengths = mel_lengths //  model.decoder.r
+#             # set the alignment lengths wrt reduction factor for guided attention
+#             if mel_lengths.max() % model.decoder.r != 0:
+#                 alignment_lengths = (mel_lengths + (model.decoder.r - (mel_lengths.max() % model.decoder.r))) // model.decoder.r
+#             else:
+#                 alignment_lengths = mel_lengths //  model.decoder.r
 
-            # compute loss
-            loss_dict = criterion(postnet_output, decoder_output, mel_input,
-                                  linear_input, stop_tokens, stop_targets,
-                                  mel_lengths, decoder_backward_output,
-                                  alignments, alignment_lengths, text_lengths)
-            if c.bidirectional_decoder:
-                keep_avg.update_values({'avg_decoder_b_loss': loss_dict['decoder_b_loss'].item(),
-                                        'avg_decoder_c_loss': loss_dict['decoder_c_loss'].item()})
-            if c.ga_alpha > 0:
-                keep_avg.update_values({'avg_ga_loss': loss_dict['ga_loss'].item()})
+#             # compute loss
+#             loss_dict = criterion(postnet_output, decoder_output, mel_input,
+#                                   linear_input, stop_tokens, stop_targets,
+#                                   mel_lengths, decoder_backward_output,
+#                                   alignments, alignment_lengths, text_lengths)
+#             if c.bidirectional_decoder:
+#                 keep_avg.update_values({'avg_decoder_b_loss': loss_dict['decoder_b_loss'].item(),
+#                                         'avg_decoder_c_loss': loss_dict['decoder_c_loss'].item()})
+#             if c.ga_alpha > 0:
+#                 keep_avg.update_values({'avg_ga_loss': loss_dict['ga_loss'].item()})
 
-            # step time
-            step_time = time.time() - start_time
-            epoch_time += step_time
+#             # step time
+#             step_time = time.time() - start_time
+#             epoch_time += step_time
 
-            # compute alignment score
-            align_error = 1 - alignment_diagonal_score(alignments)
-            keep_avg.update_value('avg_align_error', align_error)
+#             # compute alignment score
+#             align_error = 1 - alignment_diagonal_score(alignments)
+#             keep_avg.update_value('avg_align_error', align_error)
 
-            # aggregate losses from processes
-            if num_gpus > 1:
-                loss_dict['postnet_loss'] = reduce_tensor(loss_dict['postnet_loss'].data, num_gpus)
-                loss_dict['decoder_loss'] = reduce_tensor(loss_dict['decoder_loss'].data, num_gpus)
-                if c.stopnet:
-                    loss_dict['stopnet_loss'] = reduce_tensor(loss_dict['stopnet_loss'].data, num_gpus)
+#             # aggregate losses from processes
+#             if num_gpus > 1:
+#                 loss_dict['postnet_loss'] = reduce_tensor(loss_dict['postnet_loss'].data, num_gpus)
+#                 loss_dict['decoder_loss'] = reduce_tensor(loss_dict['decoder_loss'].data, num_gpus)
+#                 if c.stopnet:
+#                     loss_dict['stopnet_loss'] = reduce_tensor(loss_dict['stopnet_loss'].data, num_gpus)
 
-            keep_avg.update_values({
-                'avg_postnet_loss':
-                float(loss_dict['postnet_loss'].item()),
-                'avg_decoder_loss':
-                float(loss_dict['decoder_loss'].item()),
-                'avg_stopnet_loss':
-                float(loss_dict['stopnet_loss'].item()),
-            })
+#             keep_avg.update_values({
+#                 'avg_postnet_loss':
+#                 float(loss_dict['postnet_loss'].item()),
+#                 'avg_decoder_loss':
+#                 float(loss_dict['decoder_loss'].item()),
+#                 'avg_stopnet_loss':
+#                 float(loss_dict['stopnet_loss'].item()),
+#             })
 
-            if c.print_eval:
-                c_logger.print_eval_step(num_iter, loss_dict, keep_avg.avg_values)
+#             if c.print_eval:
+#                 c_logger.print_eval_step(num_iter, loss_dict, keep_avg.avg_values)
 
-        if args.rank == 0:
-            # Diagnostic visualizations
-            idx = np.random.randint(mel_input.shape[0])
-            const_spec = postnet_output[idx].data.cpu().numpy()
-            gt_spec = linear_input[idx].data.cpu().numpy() if c.model in [
-                "Tacotron", "TacotronGST"
-            ] else mel_input[idx].data.cpu().numpy()
-            align_img = alignments[idx].data.cpu().numpy()
+#         if args.rank == 0:
+#             # Diagnostic visualizations
+#             idx = np.random.randint(mel_input.shape[0])
+#             const_spec = postnet_output[idx].data.cpu().numpy()
+#             gt_spec = linear_input[idx].data.cpu().numpy() if c.model in [
+#                 "Tacotron", "TacotronGST"
+#             ] else mel_input[idx].data.cpu().numpy()
+#             align_img = alignments[idx].data.cpu().numpy()
 
-            eval_figures = {
-                "prediction": plot_spectrogram(const_spec, ap),
-                "ground_truth": plot_spectrogram(gt_spec, ap),
-                "alignment": plot_alignment(align_img)
-            }
+#             eval_figures = {
+#                 "prediction": plot_spectrogram(const_spec, ap),
+#                 "ground_truth": plot_spectrogram(gt_spec, ap),
+#                 "alignment": plot_alignment(align_img)
+#             }
 
-            # Sample audio
-            if c.model in ["Tacotron", "TacotronGST"]:
-                eval_audio = ap.inv_spectrogram(const_spec.T)
-            else:
-                eval_audio = ap.inv_melspectrogram(const_spec.T)
-            tb_logger.tb_eval_audios(global_step, {"ValAudio": eval_audio},
-                                     c.audio["sample_rate"])
+#             # Sample audio
+#             if c.model in ["Tacotron", "TacotronGST"]:
+#                 eval_audio = ap.inv_spectrogram(const_spec.T)
+#             else:
+#                 eval_audio = ap.inv_melspectrogram(const_spec.T)
+#             tb_logger.tb_eval_audios(global_step, {"ValAudio": eval_audio},
+#                                      c.audio["sample_rate"])
 
-            # Plot Validation Stats
-            epoch_stats = {
-                "loss_postnet": keep_avg['avg_postnet_loss'],
-                "loss_decoder": keep_avg['avg_decoder_loss'],
-                "stopnet_loss": keep_avg['avg_stopnet_loss'],
-                "alignment_score": keep_avg['avg_align_error'],
-            }
+#             # Plot Validation Stats
+#             epoch_stats = {
+#                 "loss_postnet": keep_avg['avg_postnet_loss'],
+#                 "loss_decoder": keep_avg['avg_decoder_loss'],
+#                 "stopnet_loss": keep_avg['avg_stopnet_loss'],
+#                 "alignment_score": keep_avg['avg_align_error'],
+#             }
 
-            if c.bidirectional_decoder:
-                epoch_stats['loss_decoder_backward'] = keep_avg['avg_decoder_b_loss']
-                align_b_img = alignments_backward[idx].data.cpu().numpy()
-                eval_figures['alignment_backward'] = plot_alignment(align_b_img)
-            if c.ga_alpha > 0:
-                epoch_stats['guided_attention_loss'] = keep_avg['avg_ga_loss']
-            tb_logger.tb_eval_stats(global_step, epoch_stats)
-            tb_logger.tb_eval_figures(global_step, eval_figures)
+#             if c.bidirectional_decoder:
+#                 epoch_stats['loss_decoder_backward'] = keep_avg['avg_decoder_b_loss']
+#                 align_b_img = alignments_backward[idx].data.cpu().numpy()
+#                 eval_figures['alignment_backward'] = plot_alignment(align_b_img)
+#             if c.ga_alpha > 0:
+#                 epoch_stats['guided_attention_loss'] = keep_avg['avg_ga_loss']
+#             tb_logger.tb_eval_stats(global_step, epoch_stats)
+#             tb_logger.tb_eval_figures(global_step, eval_figures)
 
     if args.rank == 0 and epoch > c.test_delay_epochs:
         if c.test_sentences_file is None:
