@@ -1,4 +1,3 @@
-
 # coding: utf-8
 import torch
 from torch import nn
@@ -9,6 +8,7 @@ class BatchNormConv1d(nn.Module):
     r"""A wrapper for Conv1d with BatchNorm. It sets the activation
     function between Conv and BatchNorm layers. BatchNorm layer
     is initialized with the TF default values for momentum and eps.
+
     Args:
         in_channels: size of each input sample
         out_channels: size of each output samples
@@ -16,6 +16,7 @@ class BatchNormConv1d(nn.Module):
         stride: stride of conv filters
         padding: padding of conv filters
         activation: activation function set b/w Conv1d and BatchNorm
+
     Shapes:
         - input: batch x dims
         - output: batch x dims
@@ -94,11 +95,13 @@ class CBHG(nn.Module):
         - 1-d convolution banks
         - Highway networks + residual connections
         - Bidirectional gated recurrent units
+
         Args:
             in_features (int): sample size
             K (int): max filter size in conv bank
             projections (list): conv channel sizes for conv projections
             num_highways (int): number of highways layers
+
         Shapes:
             - input: B x D x T_in
             - output: B x T_in x D*2
@@ -219,6 +222,7 @@ class Encoder(nn.Module):
         r"""
         Args:
             inputs (FloatTensor): embedding features
+
         Shapes:
             - inputs: batch x time x in_features
             - outputs: batch x time x 128*2
@@ -247,6 +251,7 @@ class PostCBHG(nn.Module):
 
 class Decoder(nn.Module):
     """Decoder module.
+
     Args:
         in_features (int): input vector (encoder output) sample size.
         memory_dim (int): memory vector (prev. time-step output) sample size.
@@ -408,6 +413,7 @@ class Decoder(nn.Module):
               decoder outputs are used as decoder inputs. If None, it uses the last
               output as the input.
             mask: Attention mask for sequence padding.
+
         Shapes:
             - inputs: batch x time x encoder_out_dim
             - memory: batch x #mel_specs x mel_spec_dim
@@ -438,6 +444,7 @@ class Decoder(nn.Module):
         Args:
             inputs: encoder outputs.
             speaker_embeddings: speaker vectors.
+
         Shapes:
             - inputs: batch x time x encoder_out_dim
             - speaker_embeddings: batch x embed_dim

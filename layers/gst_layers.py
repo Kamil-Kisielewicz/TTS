@@ -5,6 +5,7 @@ import torch.nn.functional as F
 
 class GST(nn.Module):
     """Global Style Token Module for factorizing prosody in speech.
+
     See https://arxiv.org/pdf/1803.09017"""
 
     def __init__(self, num_mel, num_heads, num_style_tokens, embedding_dim):
@@ -22,6 +23,7 @@ class GST(nn.Module):
 
 class ReferenceEncoder(nn.Module):
     """NN module creating a fixed size prosody embedding from a spectrogram.
+
     inputs: mel spectrograms [batch_size, num_spec_frames, num_mel]
     outputs: [batch_size, embedding_dim]
     """
