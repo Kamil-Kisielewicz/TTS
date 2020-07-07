@@ -11,22 +11,27 @@ class Logger(object):
     def tb_model_weights(self, model, step):
         layer_num = 1
         for name, param in model.named_parameters():
-            self.writer.add_scalar(
-                "layer{}-{}/max".format(layer_num, name),
-                param.max(), step)
-            self.writer.add_scalar(
-                "layer{}-{}/min".format(layer_num, name),
-                param.min(), step)
-            self.writer.add_scalar(
-                "layer{}-{}/mean".format(layer_num, name),
-                param.mean(), step)
-            self.writer.add_scalar(
-                "layer{}-{}/std".format(layer_num, name),
-                param.std(), step)
-            self.writer.add_histogram(
-                "layer{}-{}/param".format(layer_num, name), param, step)
-            self.writer.add_histogram(
-                "layer{}-{}/grad".format(layer_num, name), param.grad, step)
+            if param.numel() == 1:
+                self.writer.add_scalar(
+                    "layer{}-{}/value".format(layer_num, name),
+                    param.max(), step)
+            else:
+                self.writer.add_scalar(
+                    "layer{}-{}/max".format(layer_num, name),
+                    param.max(), step)
+                self.writer.add_scalar(
+                    "layer{}-{}/min".format(layer_num, name),
+                    param.min(), step)
+                self.writer.add_scalar(
+                    "layer{}-{}/mean".format(layer_num, name),
+                    param.mean(), step)
+                self.writer.add_scalar(
+                    "layer{}-{}/std".format(layer_num, name),
+                    param.std(), step)
+                self.writer.add_histogram(
+                    "layer{}-{}/param".format(layer_num, name), param, step)
+                self.writer.add_histogram(
+                    "layer{}-{}/grad".format(layer_num, name), param.grad, step)
             layer_num += 1
 
     def dict_to_tb_scalar(self, scope_name, stats, step):
@@ -46,7 +51,7 @@ class Logger(object):
 
     def tb_train_iter_stats(self, step, stats):
         self.dict_to_tb_scalar("TrainIterStats", stats, step)
-    
+
     def tb_train_epoch_stats(self, step, stats):
         self.dict_to_tb_scalar("TrainEpochStats", stats, step)
 
@@ -64,12 +69,9 @@ class Logger(object):
 
     def tb_eval_audios(self, step, audios, sample_rate):
         self.dict_to_tb_audios("EvalAudios", audios, step, sample_rate)
-    
+
     def tb_test_audios(self, step, audios, sample_rate):
         self.dict_to_tb_audios("TestAudios", audios, step, sample_rate)
 
     def tb_test_figures(self, step, figures):
         self.dict_to_tb_figure("TestFigures", figures, step)
-
-
-        
