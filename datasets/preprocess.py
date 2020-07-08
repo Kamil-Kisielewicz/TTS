@@ -142,7 +142,7 @@ def nancy(root_path, meta_file):
 def commonvoice_deutsche(root_path, meta_file):
   txt_file = os.path.join(root_path, meta_file)
   items = []
-  with open(txt_file, 'rb', newline='') as tsvin:
+  with open(txt_file, 'rb') as tsvin:
 #     tsvin.decode('utf-8').strip()
     tsvin = csv.reader(tsvin, delimiter='\t')
     for row in tsvin:
