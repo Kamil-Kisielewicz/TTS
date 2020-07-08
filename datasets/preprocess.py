@@ -143,7 +143,7 @@ def commonvoice_deutsche(root_path, meta_file):
   txt_file = os.path.join(root_path, meta_file)
   items = []
   with open(txt_file, 'r') as tsvin:
-#     tsvin.decode('utf-8').strip()
+    tsvin = tsvin.decode('utf-8').strip()
     tsvin = csv.reader(tsvin, delimiter='\t')
     for row in tsvin:
       text = row[2]
