@@ -17,7 +17,7 @@
 
         // Audio processing parameters
         "sample_rate": 48000,   // DATASET-RELATED: wav sample-rate. If different than the original data, it is resampled.
-        "preemphasis": 0.0,     // pre-emphasis to reduce spec noise and make it more structured. If 0.0, no -pre-emphasis.
+        "preemphasis": 0.99,     // pre-emphasis to reduce spec noise and make it more structured. If 0.0, no -pre-emphasis.
         "ref_level_db": 65,     // reference level db, theoretically 20db is the sound of air.
 
         // Silence trimming
