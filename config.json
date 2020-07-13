@@ -18,7 +18,7 @@
         "frame_shift_ms": 12.5, // stft window hop-lengh in ms.
         "preemphasis": 0.99,    // pre-emphasis to reduce spec noise and make it more structured. If 0.0, no -pre-emphasis.
         "min_level_db": -100,   // normalization range
-        "ref_level_db": 20,     // reference level db, theoretically 20db is the sound of air.
+        "ref_level_db": 60,     // reference level db, theoretically 20db is the sound of air.
         "power": 1.5,           // value to sharpen wav signals after GL algorithm.
         "griffin_lim_iters": 60,// #griffin-lim iterations. 30-60 is a good range. Larger the value, slower the generation.
         // Normalization parameters
@@ -29,7 +29,7 @@
         "mel_fmin": 0.0,         // minimum freq level for mel-spec. ~50 for male and ~95 for female voices. Tune for dataset!!
         "mel_fmax": 8000.0,        // maximum freq level for mel-spec. Tune for dataset!!
         "hop_length": 256,       // stft window hop-lengh in ms.
-        "trim_db": 60,          // threshold for timming silence. Set this according to your dataset.
+        "trim_db": 20,          // threshold for timming silence. Set this according to your dataset.
         "stats_path": null,    // DO NOT USE WITH MULTI_SPEAKER MODEL. scaler stats file computed by 'compute_statistics.py'. If it is defined, mean-std based notmalization is used and other normalization params are ignored
 
         
@@ -66,9 +66,9 @@
     "grad_clip": 1.0,                // upper limit for gradients for clipping.
     "epochs": 1,                // total number of epochs to train.
     "lr": 0.0001,                  // Initial learning rate. If Noam decay is active, maximum learning rate.
-    "lr_decay": false,             // if true, Noam learning rate decaying is applied through training.
+    "lr_decay": true,             // if true, Noam learning rate decaying is applied through training.
     "wd": 0.000001,         // Weight decay weight.
-    "warmup_steps": 4000,          // Noam decay steps to increase the learning rate from 0 to "lr"
+    "warmup_steps": 100,          // Noam decay steps to increase the learning rate from 0 to "lr"
     "seq_len_norm": false,
 
     // TACOTRON PRENET
