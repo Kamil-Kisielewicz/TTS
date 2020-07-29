@@ -90,3 +90,18 @@ def nancy(root_path, meta_file):
             items.append([text, wav_file])
     random.shuffle(items)    
     return items
+
+def commonvoice_deutsche(root_path, meta_file):
+  txt_file = os.path.join(root_path, meta_file)
+  items = []
+  with open(txt_file, 'r') as tsvin:
+#     tsvin = tsvin.decode('utf-8').strip()
+    tsvin = csv.reader(tsvin, delimiter='\t')
+    for row in tsvin:
+      text = row[2]
+      speech = os.path.join(root_path, row[1])
+      if '.mp3' in speech:
+        items.append([text, speech])
+  print(items[0])
+  random.shuffle(items)
+  return items
