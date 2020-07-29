@@ -36,8 +36,6 @@ class Tacotron(nn.Module):
         # batch x time x dim
         encoder_outputs = self.encoder(inputs)
         
-        encoder_outputs = encoder_outputs.view(B, -1, self.mel_dim)
-        
         # batch x time x dim*r
         mel_outputs, alignments, stop_tokens = self.decoder(
             encoder_outputs, mel_specs, mask)
