@@ -1,6 +1,8 @@
 {
     "model_name": "queue",
     "model_description": "Queue memory and change lower r incrementatlly",
+    "restore_path": "/data/rw/pit/keep/ljspeech-December-11-2019_04+32PM-ca49ae8/checkpoint_410000.pth.tar",
+    "continue_path": "",
 
     "audio":{
         "audio_processor": "audio",     // to use dictate different audio processors, if available.
