@@ -369,7 +369,7 @@ def main(args):
 
     partial_init_flag = False
     if args.restore_path:
-        checkpoint = torch.load(args.restore_path)
+        checkpoint = torch.load(args.restore_path, map_location=torch.device('cuda:0'))
         try:
             model.load_state_dict(checkpoint['model'])
         except:
