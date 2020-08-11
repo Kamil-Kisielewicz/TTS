@@ -244,10 +244,11 @@ def evaluate(model, criterion, criterion_st, ap, current_step):
     avg_stop_loss = 0
     print(" | > Validation")
     test_sentences = [
-        "It took me quite a long time to develop a voice, and now that I have it I'm not going to be silent.",
-        "Be a voice, not an echo.",
-        "I'm sorry Dave. I'm afraid I can't do that.",
-        "This cake is great. It's so delicious and moist."
+        "Hi there.",
+        "Hallo, ich heiße Greta.",
+        "Das Kind verschwendet Zeit damit, Feminismus zu studieren.",
+        "Seine Lieblingsfarbe ist blau.",
+        "Wenn wir alle einschlafen, fahren wir zur Hölle."
     ]
     n_priority_freq = int(
         3000 / (c.audio['sample_rate'] * 0.5) * c.audio['num_freq'])
