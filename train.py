@@ -587,27 +587,28 @@ def main(args):  # pylint: disable=redefined-outer-name
         best_loss = float('inf')
 
     global_step = args.restore_step
-    for epoch in range(0, c.epochs):
-        c_logger.print_epoch_start(epoch, c.epochs)
-        # set gradual training
-        if c.gradual_training is not None:
-            r, c.batch_size = gradual_training_scheduler(global_step, c)
-            c.r = r
-            model.decoder.set_r(r)
-            if c.bidirectional_decoder:
-                model.decoder_backward.set_r(r)
-            print("\n > Number of output frames:", model.decoder.r)
+    print(model)
+#     for epoch in range(0, c.epochs):
+#         c_logger.print_epoch_start(epoch, c.epochs)
+#         # set gradual training
+#         if c.gradual_training is not None:
+#             r, c.batch_size = gradual_training_scheduler(global_step, c)
+#             c.r = r
+#             model.decoder.set_r(r)
+#             if c.bidirectional_decoder:
+#                 model.decoder_backward.set_r(r)
+#             print("\n > Number of output frames:", model.decoder.r)
 
-        train_avg_loss_dict, global_step = train(model, criterion, optimizer,
-                                                 optimizer_st, scheduler, ap,
-                                                 global_step, epoch)
-        eval_avg_loss_dict = evaluate(model, criterion, ap, global_step, epoch)
-        c_logger.print_epoch_end(epoch, eval_avg_loss_dict)
-        target_loss = train_avg_loss_dict['avg_postnet_loss']
-        if c.run_eval:
-            target_loss = eval_avg_loss_dict['avg_postnet_loss']
-        best_loss = save_best_model(target_loss, best_loss, model, optimizer, global_step, epoch, c.r,
-                                    OUT_PATH)
+#         train_avg_loss_dict, global_step = train(model, criterion, optimizer,
+#                                                  optimizer_st, scheduler, ap,
+#                                                  global_step, epoch)
+#         eval_avg_loss_dict = evaluate(model, criterion, ap, global_step, epoch)
+#         c_logger.print_epoch_end(epoch, eval_avg_loss_dict)
+#         target_loss = train_avg_loss_dict['avg_postnet_loss']
+#         if c.run_eval:
+#             target_loss = eval_avg_loss_dict['avg_postnet_loss']
+#         best_loss = save_best_model(target_loss, best_loss, model, optimizer, global_step, epoch, c.r,
+#                                     OUT_PATH)
 
 
 if __name__ == '__main__':
