@@ -172,6 +172,9 @@ def train(model, criterion, optimizer, optimizer_st, scheduler,
         text_lengths = text_lengths.to(torch.device('cuda:0'))
         mel_input = mel_input.to(torch.device('cuda:0'))
         if speaker_ids: speaker_ids = speaker_ids.to(torch.device('cuda:0'))
+        print(text_input.device)
+        print(text_lengths.device)
+        print(mel_input.device)
         # forward pass model
         if c.bidirectional_decoder:
             decoder_output, postnet_output, alignments, stop_tokens, decoder_backward_output, alignments_backward = model(
