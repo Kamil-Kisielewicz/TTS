@@ -131,6 +131,7 @@ class GuidedAttentionLoss(torch.nn.Module):
     def __init__(self, sigma=0.4):
         super(GuidedAttentionLoss, self).__init__()
         self.sigma = sigma
+        self.device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
     def _make_ga_masks(self, ilens, olens):
         B = len(ilens)
