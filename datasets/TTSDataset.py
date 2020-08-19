@@ -177,6 +177,8 @@ class MyDataset(Dataset):
             4. Load to Torch.
         """
 
+        print(batch)
+        
         # Puts each data field into a tensor with outer dimension batch size
         if isinstance(batch[0], collections.Mapping):
 
