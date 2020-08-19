@@ -101,7 +101,7 @@ class MyDataset(Dataset):
             phonemes = self._generate_and_cache_phoneme_sequence(text,
                                                                  cache_path)
         except (ValueError, IOError):
-            print(" > ERROR: failed loading phonemes for {}. "
+            print(" > ERROR: failed   phonemes for {}. "
                   "Recomputing.".format(wav_file))
             phonemes = self._generate_and_cache_phoneme_sequence(text,
                                                                  cache_path)
@@ -112,10 +112,7 @@ class MyDataset(Dataset):
 
     def load_data(self, idx):
         text, wav_file = self.items[idx]
-        print("loading wav")
         wav = np.asarray(self.load_wav(wav_file), dtype=np.float32)
-        print(wav)
-        print("loaded wav")
         
         if self.use_phonemes:
             text = self._load_or_generate_phoneme_sequence(wav_file, text)
