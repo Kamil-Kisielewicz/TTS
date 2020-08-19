@@ -541,7 +541,7 @@ def main(args):  # pylint: disable=redefined-outer-name
     criterion = TacotronLoss(c, stopnet_pos_weight=10.0, ga_sigma=0.4)
 
     if args.restore_path:
-        checkpoint = torch.load(args.restore_path, map_location='cpu')
+        checkpoint = torch.load(args.restore_path, map_location='cuda:0')
         print("restoring!")
         try:
             # TODO: fix optimizer init, model.cuda() needs to be called before
