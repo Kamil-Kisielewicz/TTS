@@ -148,7 +148,7 @@ def train(model, criterion, optimizer, optimizer_st, scheduler,
     end_time = time.time()
     c_logger.print_train_start()
     for num_iter, data in enumerate(data_loader):
-        print(data)
+#         print(data)
 #         data = data.to(torch.device('cuda:0'))
         print(num_iter)
         start_time = time.time()
@@ -166,6 +166,10 @@ def train(model, criterion, optimizer, optimizer_st, scheduler,
         if optimizer_st:
             optimizer_st.zero_grad()
 
+        text_input = text_input.to(torch.device('cuda:0'))
+        text_lengths = text_lengths.to(torch.device('cuda:0'))
+        mel_input = mel_input.to(torch.device('cuda:0'))
+        speaker_ids = speaker_ids.to(torch.device('cuda:0'))
         # forward pass model
         if c.bidirectional_decoder:
             decoder_output, postnet_output, alignments, stop_tokens, decoder_backward_output, alignments_backward = model(
