@@ -215,6 +215,7 @@ class AudioProcessor(object):
         return self._normalize(S)
 
     def melspectrogram(self, y):
+        print(y)
         if self.preemphasis != 0:
             D = self._stft(self.apply_preemphasis(y))
         else:
