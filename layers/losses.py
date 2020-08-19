@@ -4,6 +4,7 @@ from torch import nn
 from torch.nn import functional
 from utils.generic_utils import sequence_mask
 
+device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
 class L1LossMasked(nn.Module):
 
@@ -157,8 +158,8 @@ class GuidedAttentionLoss(torch.nn.Module):
 
     @staticmethod
     def _make_ga_mask(ilen, olen, sigma):
-        grid_x, grid_y = torch.meshgrid(torch.arange(olen).to(self.device), torch.arange(ilen).to(self.device))
-        grid_x, grid_y = grid_x.float().to(self.device), grid_y.float().to(self.device)
+        grid_x, grid_y = torch.meshgrid(torch.arange(olen).to(device), torch.arange(ilen).to(device))
+        grid_x, grid_y = grid_x.float().to(device), grid_y.float().to(device)
         return 1.0 - torch.exp(-(grid_y / ilen - grid_x / olen) ** 2 / (2 * (sigma ** 2)))
 
     @staticmethod
