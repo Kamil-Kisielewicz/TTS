@@ -142,6 +142,7 @@ class GuidedAttentionLoss(torch.nn.Module):
         return ga_masks
 
     def forward(self, att_ws, ilens, olens):
+        print(att_ws.device)
         ga_masks = self._make_ga_masks(ilens, olens).to(att_ws.device)
         seq_masks = self._make_masks(ilens, olens).to(att_ws.device)
         losses = ga_masks * att_ws
