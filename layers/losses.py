@@ -137,11 +137,16 @@ class GuidedAttentionLoss(torch.nn.Module):
         max_ilen = max(ilens)
         max_olen = max(olens)
         ga_masks = torch.zeros((B, max_olen, max_ilen))
+        print("ga_masks")
+        print(ga_masks.device)
+#         print("sigma")
+#         print(self.sigma.device)
         for idx, (ilen, olen) in enumerate(zip(ilens, olens)):
             ga_masks[idx, :olen, :ilen] = self._make_ga_mask(ilen, olen, self.sigma)
         return ga_masks
 
     def forward(self, att_ws, ilens, olens):
+        print("att_ws:")
         print(att_ws.device)
         ga_masks = self._make_ga_masks(ilens, olens).to(att_ws.device)
         seq_masks = self._make_masks(ilens, olens).to(att_ws.device)
