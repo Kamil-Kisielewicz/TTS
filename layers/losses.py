@@ -137,7 +137,7 @@ class GuidedAttentionLoss(torch.nn.Module):
         B = len(ilens)
         max_ilen = max(ilens)
         max_olen = max(olens)
-        ga_masks = torch.zeros((B, max_olen, max_ilen))
+        ga_masks = torch.zeros((B, max_olen, max_ilen)).to(self.device)
         print("ga_masks")
         print(ga_masks.device)
 #         print("sigma")
