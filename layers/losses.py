@@ -228,6 +228,9 @@ class TacotronLoss(torch.nn.Module):
 
         # guided attention loss (if enabled)
         if self.config.ga_alpha > 0:
+            print(alignments.device)
+            print(input_lens.device)
+            print(alignment_lens.device)
             ga_loss = self.criterion_ga(alignments, input_lens, alignment_lens)
             loss += ga_loss * self.ga_alpha
             return_dict['ga_loss'] = ga_loss * self.ga_alpha
