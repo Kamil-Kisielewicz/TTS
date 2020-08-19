@@ -151,6 +151,8 @@ def train(model, criterion, optimizer, optimizer_st, scheduler,
 #         print(data)
 #         data = data.to(torch.device('cuda:0'))
         print(num_iter)
+  
+        print(next(model.parameters()).device)
         start_time = time.time()
 
         # format data
