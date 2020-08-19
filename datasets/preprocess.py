@@ -109,6 +109,19 @@ def ljspeech(root_path, meta_file):
     random.shuffle(items)
     return items
 
+def thorsten(root_path, meta_file):
+    """Normalizes the LJSpeech meta data file to TTS format"""
+    txt_file = os.path.join(root_path, meta_file)
+    items = []
+    with open(txt_file, 'r') as ttf:
+        for line in ttf:
+            cols = line.split('|')
+            wav_file = os.path.join(root_path, 'wavs', cols[0]+'.wav')
+            text = cols[1] if cols[1][-3:-1] != '\n' else cols[1][:-2]
+            items.append([text, wav_file])
+    random.shuffle(items)
+    return items
+
 def ttsportuguese(root_path, meta_file):
     """Normalizes the TTS-Portuguese Corpus meta data file to TTS format"""
     txt_file = os.path.join(root_path, meta_file)
