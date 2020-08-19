@@ -148,7 +148,8 @@ def train(model, criterion, optimizer, optimizer_st, scheduler,
     end_time = time.time()
     c_logger.print_train_start()
     for num_iter, data in enumerate(data_loader):
-        data = data.to(torch.device('cuda:0'))
+        print(data)
+#         data = data.to(torch.device('cuda:0'))
         print(num_iter)
         start_time = time.time()
 
