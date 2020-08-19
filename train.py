@@ -147,7 +147,7 @@ def train(model, criterion, optimizer, optimizer_st, scheduler,
         batch_n_iter = int(len(data_loader.dataset) / c.batch_size)
     end_time = time.time()
     c_logger.print_train_start()
-    print("training is started")
+    print(len(data_loader.dataset))
     for num_iter, data in enumerate(data_loader):
         print(num_iter)
         start_time = time.time()
