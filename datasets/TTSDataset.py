@@ -70,6 +70,7 @@ class MyDataset(Dataset):
         self.sort_items()
 
     def load_wav(self, filename):
+        # comment out the ', sr=self.ap.sample_rate) and add a ) for .wav!!!!!
         audio = self.ap.load_wav(filename, sr=self.ap.sample_rate)
         return audio
 
