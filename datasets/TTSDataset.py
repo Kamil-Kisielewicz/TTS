@@ -176,11 +176,6 @@ class MyDataset(Dataset):
             3. PAD sequences wrt r.
             4. Load to Torch.
         """
-
-        print("printing batch")
-        print(batch)
-        print("batch printed")
-        
         # Puts each data field into a tensor with outer dimension batch size
         if isinstance(batch[0], collections.Mapping):
 
