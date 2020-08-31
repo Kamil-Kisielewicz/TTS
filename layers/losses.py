@@ -4,6 +4,7 @@ from torch import nn
 from torch.nn import functional
 from utils.generic_utils import sequence_mask
 
+device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
 class L1LossMasked(nn.Module):
 
