@@ -304,6 +304,7 @@ class AudioProcessor(object):
 
     ### save and load ###
     def load_wav(self, filename, sr=None):
+        print(filename)
 #         if '.mp3' not in filename:
 #             return None
         if sr is None:
