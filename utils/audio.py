@@ -310,14 +310,17 @@ class AudioProcessor(object):
             x, sr = sf.read(filename)
         else:
             x, sr = librosa.load(filename, sr=sr)
+        print(x)
         if self.do_trim_silence:
             try:
                 x = self.trim_silence(x)
             except ValueError:
                 print(f' [!] File cannot be trimmed for silence - {filename}')
+        print(x)
         assert self.sample_rate == sr, "%s vs %s"%(self.sample_rate, sr)
         if self.do_sound_norm:
             x = self.sound_norm(x)
+        print(x)
         return x
 
     def save_wav(self, wav, path):
